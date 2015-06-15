@@ -53,6 +53,7 @@ class bex_d7dull extends CModule
 
     public function doInstall()
     {
+        $this->InstallFiles();
         ModuleManager::registerModule($this->MODULE_ID);
         $this->installDB();
     }
@@ -60,6 +61,7 @@ class bex_d7dull extends CModule
     public function doUninstall()
     {
         $this->uninstallDB();
+        $this->UnInstallFiles();
         ModuleManager::unregisterModule($this->MODULE_ID);
     }
 
@@ -77,4 +79,43 @@ class bex_d7dull extends CModule
             $connection->dropTable(ExampleTable::getTableName());
         }
     }
+    
+    public function InstallFiles()
+    {
+        CopyDirFiles(
+            $_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/admin",
+            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/admin", true
+        );
+        /*
+        CopyDirFiles(
+            $_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/images",
+            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/images/" . $this->MODULE_ID, true
+        );
+        CopyDirFiles(
+            $_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/js",
+            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . $this->MODULE_ID, true
+        );
+        */
+        return true;
+    }
+
+    public function UnInstallFiles($arParams = array())
+    {
+        DeleteDirFiles(
+            $_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/admin",
+            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/admin"
+        );
+        /*
+        DeleteDirFiles(
+            $_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/images",
+            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/images/" . $this->MODULE_ID
+        );
+        DeleteDirFiles(
+            $_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/js",
+            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js/" . $this->MODULE_ID
+        );
+        */
+        return true;
+    }
+
 }
